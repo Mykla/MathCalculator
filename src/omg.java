@@ -1,3 +1,4 @@
+import java.text.ParseException;
 import java.util.Scanner;
 
 /**
@@ -8,52 +9,44 @@ import java.util.Scanner;
  * Created by user on 22.03.2015.
  */
 public class omg {
-    public static void main(String args[]) {
-        int fnum = 0;
+    public static void main(String args[]) throws ParseException {
+        double fnum; // Определение результирующей переменной
         String strtype; // Выражение, введенное из командной строки
-        char[] testchar; // Массив символов после преобразования введенного выражения (тип String)
-        char currentchar; // Промежуточная символьная переменная для обработки массива символов в цикле
-        String tempnumstr = null; //Промежуточная строчная переменная для преобразования в int
 
         Scanner scan = new Scanner(System.in); // Ввод выражения для расчета
         System.out.println("Введите выражение для расчета: ");
         strtype = scan.nextLine();
 
-        testchar = strtype.toCharArray(); //преобразования введенного выражения в массив символов
+        String[] numerics = strtype.split("[+-/*]"); // Вычленение "подстрок" заданного типа [+-/*]
+
+        double[] numbers = new double[numerics.length]; // Задание массива для преебразованиея в double
+        for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = Double.valueOf(numerics[i]);  // Заполнение массива преобразованными к double значениями
+        }
 
         //Задаем первый аргумент для вычисления
-        String charToString = Character.toString(testchar[0]);
-        fnum = Character.getNumericValue(charToString.charAt(0));
+        fnum = numbers[0];
+
+        // Определяется массив имевших место операторов в выражении
+        String[] operators = strtype.split("\\d+");
 
         int b = 1;
-        while (b < testchar.length) {
-            currentchar = testchar[b];
+        while (b < operators.length) {
                         // Сложение
-            if (currentchar == '+') {
-                tempnumstr = Character.toString(testchar[b + 1]);
-                fnum = fnum + Integer.parseInt(tempnumstr);
-                tempnumstr = null;
-                b = b + 2;
+            if (operators[b].compareTo("+") == 0) {
+                fnum = fnum + numbers[b];
+                b++;
                          // Вычитание
-            } else if (currentchar == '-') {
-                tempnumstr = Character.toString(testchar[b + 1]);
-                fnum = fnum - Integer.parseInt(tempnumstr);
-                tempnumstr = null;
-                b = b + 2;
+            } else if (operators[b].compareTo("-") == 0) {
+                fnum = fnum - numbers[b];
+                b++;
                          // Умножение
-            } else if (currentchar == '*') {
-                tempnumstr = Character.toString(testchar[b + 1]);
-                fnum = fnum * Integer.parseInt(tempnumstr);
-                tempnumstr = null;
-                b = b + 2;
+            } else if (operators[b].compareTo("*") == 0) {
+                fnum = fnum * numbers[b];
+                b++;
                           // Деление
-            } else if (currentchar == '/') {
-                tempnumstr = Character.toString(testchar[b + 1]);
-                fnum = fnum / Integer.parseInt(tempnumstr);
-                tempnumstr = null;
-                b = b + 2;
-            } else {
-                tempnumstr = tempnumstr + currentchar; // Попытка создать символбную переменную для n-разрядного числа
+            } else if (operators[b].compareTo("/") == 0) {
+                fnum = fnum * numbers[b];
                 b++;
             }
         }
